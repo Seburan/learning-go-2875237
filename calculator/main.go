@@ -2,8 +2,32 @@ package main
 
 import (
 	"fmt"
+	"io"
+	"os"
 )
 
 func main() {
 	fmt.Println("Files")
+
+	content := "Hello from Go !"
+	file, err := os.Create("./hello.txt");
+	defer file.Close();
+	checkError(err);
+	length, err := io.WriteString(file, content);
+	checkError(err);
+	fmt.Printf("Wrote a file with %v characters\n", length);
+
+	defer readFile("./hello.txt");
+}
+
+func readFile(fileName string) {
+	data, err := os.ReadFile(fileName);
+	checkError(err);
+	fmt.Println("Text read from file : ", string(data))
+}
+
+func checkError(err error) {
+	if err != nil {
+		panic(err);
+	}
 }
